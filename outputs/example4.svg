@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1542" font-family="Helvetica,Arial,sans-serif">
+<rect width="100%" height="100%" fill="white"/>
+<polygon points="82.61,1072.64 82.61,1459.37 662.70,1459.37 662.70,1072.64 465.28,1072.64 465.28,1033.96 701.38,1033.96 701.38,1420.69 817.39,1420.69 817.39,82.61 82.61,82.61 82.61,1459.37" fill="#f6f6f6" stroke="#333" stroke-width="2"/>
+<line x1="817.39" y1="82.61" x2="817.39" y2="430.66" stroke="#e63946" stroke-width="5" stroke-linecap="round"/>
+<polygon points="554.42,82.61 82.61,82.61 82.61,596.96 554.42,596.96" fill="#f4a261" fill-opacity="0.95" stroke="#264653" stroke-width="1.5"/>
+<text x="318.51" y="339.78" font-size="57" text-anchor="middle" dominant-baseline="middle" fill="#1d3557">fridge</text>
+<text x="318.51" y="402.06" font-size="48" text-anchor="middle" fill="#45586b">180&#176;</text>
+<polygon points="237.30,1459.37 237.30,1072.64 82.61,1072.64 82.61,1459.37" fill="#90be6d" fill-opacity="0.95" stroke="#264653" stroke-width="1.5"/>
+<text x="159.95" y="1266.00" font-size="46" text-anchor="middle" dominant-baseline="middle" fill="#1d3557">shelf-1</text>
+<text x="159.95" y="1317.05" font-size="39" text-anchor="middle" fill="#45586b">90&#176;</text>
+<polygon points="662.70,1459.37 662.70,1072.64 508.01,1072.64 508.01,1459.37" fill="#90be6d" fill-opacity="0.95" stroke="#264653" stroke-width="1.5"/>
+<text x="585.36" y="1266.00" font-size="46" text-anchor="middle" dominant-baseline="middle" fill="#1d3557">shelf-2</text>
+<text x="585.36" y="1317.05" font-size="39" text-anchor="middle" fill="#45586b">90&#176;</text>
+<polygon points="237.30,1459.37 469.34,1459.37 469.34,1304.68 237.30,1304.68" fill="#c8b6ff" fill-opacity="0.95" stroke="#264653" stroke-width="1.5"/>
+<text x="353.32" y="1382.02" font-size="28" text-anchor="middle" dominant-baseline="middle" fill="#1d3557">overShelf-1</text>
+<text x="353.32" y="1412.65" font-size="24" text-anchor="middle" fill="#45586b">0&#176;</text>
+<polygon points="817.39,1033.96 817.39,801.93 662.70,801.93 662.70,1033.96" fill="#c8b6ff" fill-opacity="0.95" stroke="#264653" stroke-width="1.5"/>
+<text x="740.05" y="917.94" font-size="28" text-anchor="middle" dominant-baseline="middle" fill="#1d3557">overShelf-2</text>
+<text x="740.05" y="948.57" font-size="24" text-anchor="middle" fill="#45586b">90&#176;</text>
+<polygon points="817.39,801.93 817.39,569.89 662.70,569.89 662.70,801.93" fill="#c8b6ff" fill-opacity="0.95" stroke="#264653" stroke-width="1.5"/>
+<text x="740.05" y="685.91" font-size="28" text-anchor="middle" dominant-baseline="middle" fill="#1d3557">overShelf-3</text>
+<text x="740.05" y="716.53" font-size="24" text-anchor="middle" fill="#45586b">90&#176;</text>
+</svg>

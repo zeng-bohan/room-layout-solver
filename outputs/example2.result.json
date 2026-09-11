@@ -1,0 +1,63 @@
+{
+  "feasible": true,
+  "placements": {
+    "fridge": {
+      "center": [
+        29658.3885,
+        32610.0295
+      ],
+      "rotation": 270.0
+    },
+    "shelf-1": {
+      "center": [
+        31396.3885,
+        32540.0295
+      ],
+      "rotation": 90.0
+    },
+    "shelf-2": {
+      "center": [
+        31396.3885,
+        34470.0295
+      ],
+      "rotation": 90.0
+    },
+    "shelf-3": {
+      "center": [
+        30696.3885,
+        34770.0295
+      ],
+      "rotation": 0.0
+    },
+    "shelf-4": {
+      "center": [
+        29996.3885,
+        34470.0295
+      ],
+      "rotation": 90.0
+    },
+    "overShelf-1": {
+      "center": [
+        29596.3885,
+        34670.0295
+      ],
+      "rotation": 90.0
+    },
+    "overShelf-2": {
+      "center": [
+        29193.3885,
+        34620.0295
+      ],
+      "rotation": 90.0
+    },
+    "overShelf-3": {
+      "center": [
+        31296.3885,
+        33575.6321
+      ],
+      "rotation": 0.0
+    }
+  },
+  "allItemsWallFlush": true,
+  "fridgeDoorClearanceMm": 610.0
+}
