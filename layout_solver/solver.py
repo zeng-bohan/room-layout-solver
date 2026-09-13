@@ -23,12 +23,12 @@ import time
 
 from . import geometry as geo
 
-ANGLE_TOL = 0.5          # degrees; angles closer than this are "the same"
-WALL_SLIDE_STEP = 50.0   # mm between wall-flush candidate positions
-BUTT_SLIDE_STEP = 50.0   # mm between butt-joint candidate positions
-GRID_STEP = 250.0        # mm between free-grid fallback candidates
-CONTACT_TOL = 1.0        # mm; proximity treated as "flush"
-MIN_DOOR_CLEARANCE = 2.0 # mm strip that keeps the fridge door edge touch-free
+ANGLE_TOL = 0.5  # degrees; angles closer than this are "the same"
+WALL_SLIDE_STEP = 50.0  # mm between wall-flush candidate positions
+BUTT_SLIDE_STEP = 50.0  # mm between butt-joint candidate positions
+GRID_STEP = 250.0  # mm between free-grid fallback candidates
+CONTACT_TOL = 1.0  # mm; proximity treated as "flush"
+MIN_DOOR_CLEARANCE = 2.0  # mm strip that keeps the fridge door edge touch-free
 
 
 def _ang_norm360(a):
@@ -46,8 +46,8 @@ class Wall:
     def __init__(self, a, b, u, n, angle, length):
         self.a = a
         self.b = b
-        self.u = u          # unit vector along the wall
-        self.n = n          # unit inward normal
+        self.u = u  # unit vector along the wall
+        self.n = n  # unit inward normal
         self.angle = angle  # degrees, mod 180
         self.length = length
 
@@ -122,8 +122,7 @@ class Problem:
     def _find_door_wall(self):
         best, best_d = None, float("inf")
         for w in self.walls:
-            d = max(self._pt_seg_dist(self.door[0], w),
-                    self._pt_seg_dist(self.door[1], w))
+            d = max(self._pt_seg_dist(self.door[0], w), self._pt_seg_dist(self.door[1], w))
             if d < best_d:
                 best, best_d = w, d
         if best is None or best_d > 2.0:
@@ -179,10 +178,10 @@ class Problem:
         return sorted(rots)
 
     @staticmethod
-    def _extent(angle, l, w, axis_angle):
-        """Extent of an l x w rect rotated by `angle`, projected on `axis_angle`."""
+    def _extent(angle, length, w, axis_angle):
+        """Extent of a length x w rect rotated by `angle`, projected on `axis_angle`."""
         d = math.radians(angle - axis_angle)
-        return l * abs(math.cos(d)) + w * abs(math.sin(d))
+        return length * abs(math.cos(d)) + w * abs(math.sin(d))
 
     def snap_angle(self, angle):
         """Snap an item angle to the exact wall-parallel direction (mod 360:
@@ -193,8 +192,9 @@ class Problem:
         refs = [0.0, 90.0, 180.0, 270.0]
         for b in self.allowed_angles:
             if not (ang_eq(b, 0.0) or ang_eq(b, 90.0)):
-                refs.extend((b % 360.0, (b + 90.0) % 360.0,
-                             (b + 180.0) % 360.0, (b + 270.0) % 360.0))
+                refs.extend(
+                    (b % 360.0, (b + 90.0) % 360.0, (b + 180.0) % 360.0, (b + 270.0) % 360.0)
+                )
         best, best_d = a, 1e9
         for r in refs:
             d = min(abs(a - r), 360.0 - abs(a - r))
@@ -215,7 +215,12 @@ class _Placed:
 
 
 class Solver:
-    def __init__(self, problem, node_cap=150_000, time_cap=20.0):
+    """Deterministic search: the budget is counted in DFS nodes only, so the
+    same input always yields the same output regardless of machine speed.
+    ``time_cap`` is a runaway guard for pathological inputs, far above what
+    the shipped examples ever reach (they finish in seconds)."""
+
+    def __init__(self, problem, node_cap=150_000, time_cap=300.0):
         self.p = problem
         self.node_cap = node_cap
         self.time_cap = time_cap
@@ -226,9 +231,9 @@ class Solver:
 
     def solve(self):
         p = self.p
-        names = sorted(p.items,
-                       key=lambda n: (p.item_type(n) != "fridge",
-                                      -p.items[n][0] * p.items[n][1], n))
+        names = sorted(
+            p.items, key=lambda n: (p.item_type(n) != "fridge", -p.items[n][0] * p.items[n][1], n)
+        )
         if p.has_fridge:
             fl = p.items[next(n for n in names if p.item_type(n) == "fridge")][0]
             levels = [fl, fl / 2.0, 0.0]
@@ -285,9 +290,16 @@ class Solver:
                 return True
             if suffix[idx] > (p.poly_area - door_zone_area - used_area) + 1.0:
                 return False
-            for rect, strip in self._candidates(names[idx], placed):
-                if not self._fits(rect, strip, placed):
-                    continue
+            # Feasibility filter first, scoring after: scoring is O(candidates
+            # x walls), while most candidates never pass ``_fits`` — and since
+            # filtering commutes with the stable score sort, the trial order
+            # (and therefore the solution) is unchanged.
+            fitted = [
+                (rect, strip)
+                for rect, strip in self._candidates(names[idx], placed)
+                if self._fits(rect, strip, placed)
+            ]
+            for rect, strip in self._score_all(fitted, placed):
                 entry = _Placed(names[idx], rect, strip)
                 placed.append(entry)
                 if rec(idx + 1, used_area + areas[idx]):
@@ -323,35 +335,35 @@ class Solver:
         """Clear strip in front of the fridge door edge (local +y side)."""
         if self.p.item_type(name) != "fridge":
             return None
-        c, a, l, w = rect
+        c, a, length, w = rect
         depth = max(self._fridge_clearance, MIN_DOOR_CLEARANCE)
         rad = math.radians(a)
         nx, ny = -math.sin(rad), math.cos(rad)  # local +y axis in world
         edge_mid = (c[0] + nx * w / 2.0, c[1] + ny * w / 2.0)
         center = (edge_mid[0] + nx * depth / 2.0, edge_mid[1] + ny * depth / 2.0)
-        return (center, a, l, depth)
+        return (center, a, length, depth)
 
     def _candidates(self, name, placed):
         p = self.p
-        l, w = p.items[name]
+        length, w = p.items[name]
         rots = p.rotations_for(name)
         seen = set()
         out = []
 
         def add(center, angle):
-            key = (round(center[0] / 25.0), round(center[1] / 25.0),
-                   round(angle / 45.0))
+            key = (round(center[0] / 25.0), round(center[1] / 25.0), round(angle / 45.0))
             if key not in seen:
                 seen.add(key)
-                out.append(((center, angle, l, w), self._fridge_strip(name, (center, angle, l, w))))
+                rect = (center, angle, length, w)
+                out.append((rect, self._fridge_strip(name, rect)))
 
         # 1) wall-flush placements
         for wall in p.walls:
             for theta in rots:
                 if not (ang_eq(theta, wall.angle) or ang_eq(theta, wall.angle + 90.0)):
                     continue
-                eu = p._extent(theta, l, w, wall.angle)
-                en = p._extent(theta, l, w, wall.angle + 90.0)
+                eu = p._extent(theta, length, w, wall.angle)
+                en = p._extent(theta, length, w, wall.angle + 90.0)
                 if eu > wall.length + 1e-6:
                     continue
                 ts = []
@@ -380,8 +392,8 @@ class Solver:
                     for theta in rots:
                         if not (ang_eq(theta, pa) or ang_eq(theta, pa + 90.0)):
                             continue
-                        e_n = p._extent(theta, l, w, out_ang)
-                        e_u = p._extent(theta, l, w, u_ang)
+                        e_n = p._extent(theta, length, w, out_ang)
+                        e_u = p._extent(theta, length, w, u_ang)
                         base = geo.add(side_mid, geo.mul(outward, e_n / 2.0))
                         t = -e_u / 2.0
                         stop = side_len - e_u / 2.0 + 1e-9
@@ -402,20 +414,18 @@ class Solver:
                     gy += GRID_STEP
                 gx += GRID_STEP
 
-        return self._score_all(out, placed)
+        return out
 
     def _score_all(self, cands, placed):
         p = self.p
         scored = []
         for rect, strip in cands:
             wall_contact = sum(
-                geo.segment_rect_overlap_len(wa.a, wa.b, rect, CONTACT_TOL)
-                for wa in p.walls)
-            butt = sum(geo.rects_edge_contact_len(rect, pl.rect, CONTACT_TOL)
-                       for pl in placed)
+                geo.segment_rect_overlap_len(wa.a, wa.b, rect, CONTACT_TOL) for wa in p.walls
+            )
+            butt = sum(geo.rects_edge_contact_len(rect, pl.rect, CONTACT_TOL) for pl in placed)
             growth = self._bbox_growth(rect, placed)
-            scored.append(((round(wall_contact + 0.3 * butt, 3),
-                            -round(growth, 1)), rect, strip))
+            scored.append(((round(wall_contact + 0.3 * butt, 3), -round(growth, 1)), rect, strip))
         scored.sort(key=lambda s: (s[0], s[1][1]), reverse=True)
         return [(r, s) for _sc, r, s in scored]
 
