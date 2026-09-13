@@ -166,3 +166,7 @@ SVG 为等比俯视图：灰底为房间轮廓，红线为门，粉色虚线方�
 ├── outputs/                 # 运行产物（结果 JSON + SVG）
 └── docs/题目要求.txt         # 原题面
 ```
+
+## License
+
+MIT — see [LICENSE](LICENSE).
