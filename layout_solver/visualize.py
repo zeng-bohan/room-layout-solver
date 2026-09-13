@@ -1,16 +1,10 @@
 """Minimal SVG renderer for a layout result (standard library only)."""
 
 from . import geometry as geo
-from .solver import ANGLE_TOL
 
 
-def snap_angle(angle):
-    a = angle % 360.0
-    for axis in (0.0, 90.0, 180.0, 270.0):
-        d = abs(a - axis)
-        if min(d, 360.0 - d) <= ANGLE_TOL:
-            return axis
-    return round(a, 2)
+def _fmt_angle(angle):
+    return "%g" % round(angle, 2)
 
 TYPE_COLORS = {
     "fridge": "#f4a261",
@@ -69,8 +63,8 @@ def render_svg(problem, placements, width=900.0):
                      'dominant-baseline="middle" fill="#1d3557">%s</text>'
                      % (lx, ly, fs, _esc(pl.name)))
         parts.append('<text x="%.2f" y="%.2f" font-size="%.0f" text-anchor="middle" '
-                     'fill="#45586b">%.0f&#176;</text>'
-                     % (lx, ly + fs * 1.1, fs * 0.85, snap_angle(a)))
+                     'fill="#45586b">%s&#176;</text>'
+                     % (lx, ly + fs * 1.1, fs * 0.85, _fmt_angle(problem.snap_angle(a))))
     parts.append('</svg>')
     return "\n".join(parts), height
 

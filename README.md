@@ -6,7 +6,7 @@
 
 ## 1. AI 工具使用说明
 
-- **使用的工具**：Claude（通过 ZCode 命令行 agent 完成全流程）。
+- **使用的工具**：ZCode 命令行 agent（GLM-5.3-Flash 模型）。
 - **AI 主要帮助的部分**：整体思路拆解（约束建模、两阶段搜索策略）、代码骨架与几何
   工具函数生成、SVG 可视化与冒烟测试用例的生成、Debug 定位。
 - **我自己理解并调整的关键逻辑**：
@@ -74,7 +74,7 @@ python main.py examples --out outputs
 python tests.py
 ```
 
-每次求解输出两个文件：`<name>.result.json`（结果）与 `<name>.svg`（俯视图），
+每次求解输出 `<name>.result.json`（结果），可行时额外输出 `<name>.svg`（俯视图），
 并在终端打印独立校验器的逐项检查结果（校验失败进程退出码为 1）。
 
 ### 输入格式（与题目给定一致）
@@ -105,14 +105,24 @@ python tests.py
 
 ## 5. 既定输入的输出示例
 
-4 个给定示例全部可行、全部物品贴墙、全部通过独立校验（原始坐标，单位 mm）：
+4 个给定示例全部可行、全部物品贴墙、全部通过独立校验（原始坐标，单位 mm）。
+布局俯视图（灰底为房间轮廓，红线为门，粉色虚线方块为内开门 N×N 摆动区，
+橙/蓝/绿/紫分别为冰箱/制冰机/货架/离地架，标注物品名与旋转角）：
 
-| 输入 | 结果 | 布局图 |
-| --- | --- | --- |
-| example1（斜墙五边形，含制冰机） | [example1.result.json](outputs/example1.result.json) | [example1.svg](outputs/example1.svg) |
-| example2（含 30×100 柱与门位） | [example2.result.json](outputs/example2.result.json) | [example2.svg](outputs/example2.svg) |
-| example3（内开门，9 件） | [example3.result.json](outputs/example3.result.json) | [example3.svg](outputs/example3.svg) |
-| example4（带凹槽轮廓，6 件） | [example4.result.json](outputs/example4.result.json) | [example4.svg](outputs/example4.svg) |
+| example1（斜墙五边形，含制冰机） | example2 |
+| --- | --- |
+| ![example1](outputs/example1.svg) | ![example2](outputs/example2.svg) |
+| **example3（内开门，9 件）** | **example4（带凹槽轮廓，6 件）** |
+| ![example3](outputs/example3.svg) | ![example4](outputs/example4.svg) |
+
+结果文件：[example1](outputs/example1.result.json) ·
+[example2](outputs/example2.result.json) ·
+[example3](outputs/example3.result.json) ·
+[example4](outputs/example4.result.json)；
+对应布局图：[example1](outputs/example1.svg) ·
+[example2](outputs/example2.svg) ·
+[example3](outputs/example3.svg) ·
+[example4](outputs/example4.svg)。
 
 example1 输出节选（完整见文件）：
 
@@ -122,10 +132,10 @@ example1 输出节选（完整见文件）：
   "allItemsWallFlush": true,
   "fridgeDoorClearanceMm": 610.0,
   "placements": {
-    "fridge":     {"center": [5191.8913, 31931.0171], "rotation": 195.85},
+    "fridge":     {"center": [5191.8913, 31931.0171], "rotation": 195.851998},
     "iceMaker":   {"center": [6696.7357, 29121.7939], "rotation": 90.0},
-    "shelf-1":    {"center": [5362.6378, 29828.7073], "rotation": 105.85},
-    "overShelf-3":{"center": [6546.3095, 32798.9897], "rotation": 15.85}
+    "shelf-1":    {"center": [5362.6378, 29828.7073], "rotation": 105.851998},
+    "overShelf-3":{"center": [6546.3095, 32798.9897], "rotation": 15.852}
   }
 }
 ```

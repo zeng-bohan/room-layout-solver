@@ -184,6 +184,26 @@ class Problem:
         d = math.radians(angle - axis_angle)
         return l * abs(math.cos(d)) + w * abs(math.sin(d))
 
+    def snap_angle(self, angle):
+        """Snap an item angle to the exact wall-parallel direction (mod 360:
+        90 vs 270 differ for the fridge door side). Non-axis rooms keep the
+        exact clustered wall angle so placed items are parallel to the wall
+        to full float precision."""
+        a = angle % 360.0
+        refs = [0.0, 90.0, 180.0, 270.0]
+        for b in self.allowed_angles:
+            if not (ang_eq(b, 0.0) or ang_eq(b, 90.0)):
+                refs.extend((b % 360.0, (b + 90.0) % 360.0,
+                             (b + 180.0) % 360.0, (b + 270.0) % 360.0))
+        best, best_d = a, 1e9
+        for r in refs:
+            d = min(abs(a - r), 360.0 - abs(a - r))
+            if d < best_d:
+                best, best_d = r, d
+        if best_d <= ANGLE_TOL:
+            return round(best, 6)
+        return round(a, 4)
+
 
 class _Placed:
     __slots__ = ("name", "rect", "strip")
@@ -240,19 +260,9 @@ class Solver:
             ox, oy = p.offset
             out["placements"][pl.name] = {
                 "center": [round(cx + ox, 4), round(cy + oy, 4)],
-                "rotation": self._snap_angle(pl.rect[1]),
+                "rotation": p.snap_angle(pl.rect[1]),
             }
         return out
-
-    @staticmethod
-    def _snap_angle(angle):
-        # mod-360 comparison: 90 vs 270 differ for the fridge door side
-        a = _ang_norm360(angle)
-        for axis in (0.0, 90.0, 180.0, 270.0):
-            d = abs(a - axis)
-            if min(d, 360.0 - d) <= ANGLE_TOL:
-                return axis
-        return round(a, 2)
 
     # ----------------------------------------------------------------- search
 

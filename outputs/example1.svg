@@ -2,28 +2,28 @@
 <rect width="100%" height="100%" fill="white"/>
 <polygon points="825.96,74.04 825.96,1308.10 456.48,1307.94 405.99,1130.12 320.21,1154.47 74.04,287.55" fill="#f6f6f6" stroke="#333" stroke-width="2"/>
 <line x1="825.96" y1="192.14" x2="825.96" y2="470.80" stroke="#e63946" stroke-width="5" stroke-linecap="round"/>
-<polygon points="401.09,194.69 74.05,287.54 175.27,644.07 502.31,551.22" fill="#f4a261" fill-opacity="0.95" stroke="#264653" stroke-width="1.5"/>
+<polygon points="401.08,194.69 74.04,287.55 175.28,644.08 502.32,551.21" fill="#f4a261" fill-opacity="0.95" stroke="#264653" stroke-width="1.5"/>
 <text x="288.18" y="419.38" font-size="41" text-anchor="middle" dominant-baseline="middle" fill="#1d3557">fridge</text>
-<text x="288.18" y="464.26" font-size="35" text-anchor="middle" fill="#45586b">196&#176;</text>
+<text x="288.18" y="464.26" font-size="35" text-anchor="middle" fill="#45586b">195.85&#176;</text>
 <polygon points="825.96,1308.10 825.96,1096.32 589.09,1096.32 589.09,1308.10" fill="#8ecae6" fill-opacity="0.95" stroke="#264653" stroke-width="1.5"/>
 <text x="707.53" y="1202.21" font-size="25" text-anchor="middle" dominant-baseline="middle" fill="#1d3557">iceMaker</text>
 <text x="707.53" y="1230.16" font-size="22" text-anchor="middle" fill="#45586b">90&#176;</text>
-<polygon points="427.43,1124.03 351.32,855.96 244.09,886.40 320.20,1154.47" fill="#90be6d" fill-opacity="0.95" stroke="#264653" stroke-width="1.5"/>
+<polygon points="427.43,1124.03 351.32,855.96 244.09,886.41 320.21,1154.47" fill="#90be6d" fill-opacity="0.95" stroke="#264653" stroke-width="1.5"/>
 <text x="335.76" y="1005.22" font-size="33" text-anchor="middle" dominant-baseline="middle" fill="#1d3557">shelf-1</text>
-<text x="335.76" y="1042.00" font-size="28" text-anchor="middle" fill="#45586b">106&#176;</text>
+<text x="335.76" y="1042.00" font-size="28" text-anchor="middle" fill="#45586b">105.85&#176;</text>
 <polygon points="825.96,756.77 825.96,478.10 714.49,478.10 714.49,756.77" fill="#90be6d" fill-opacity="0.95" stroke="#264653" stroke-width="1.5"/>
 <text x="770.22" y="617.44" font-size="33" text-anchor="middle" dominant-baseline="middle" fill="#1d3557">shelf-2</text>
 <text x="770.22" y="654.22" font-size="28" text-anchor="middle" fill="#45586b">90&#176;</text>
 <polygon points="825.96,1035.43 825.96,756.77 714.49,756.77 714.49,1035.43" fill="#90be6d" fill-opacity="0.95" stroke="#264653" stroke-width="1.5"/>
 <text x="770.22" y="896.10" font-size="33" text-anchor="middle" dominant-baseline="middle" fill="#1d3557">shelf-3</text>
 <text x="770.22" y="932.88" font-size="28" text-anchor="middle" fill="#45586b">90&#176;</text>
-<polygon points="563.70,1277.49 518.04,1116.65 410.81,1147.09 456.48,1307.93" fill="#c8b6ff" fill-opacity="0.95" stroke="#264653" stroke-width="1.5"/>
+<polygon points="563.71,1277.49 518.04,1116.65 410.81,1147.10 456.48,1307.94" fill="#c8b6ff" fill-opacity="0.95" stroke="#264653" stroke-width="1.5"/>
 <text x="487.26" y="1212.29" font-size="20" text-anchor="middle" dominant-baseline="middle" fill="#1d3557">overShelf-1</text>
-<text x="487.26" y="1234.36" font-size="17" text-anchor="middle" fill="#45586b">106&#176;</text>
-<polygon points="439.57,299.63 600.41,253.96 569.97,146.74 409.13,192.40" fill="#c8b6ff" fill-opacity="0.95" stroke="#264653" stroke-width="1.5"/>
+<text x="487.26" y="1234.36" font-size="17" text-anchor="middle" fill="#45586b">105.85&#176;</text>
+<polygon points="439.57,299.63 600.41,253.96 569.96,146.73 409.12,192.40" fill="#c8b6ff" fill-opacity="0.95" stroke="#264653" stroke-width="1.5"/>
 <text x="504.77" y="223.18" font-size="20" text-anchor="middle" dominant-baseline="middle" fill="#1d3557">overShelf-2</text>
-<text x="504.77" y="245.25" font-size="17" text-anchor="middle" fill="#45586b">16&#176;</text>
-<polygon points="600.41,253.96 761.25,208.29 730.81,101.06 569.96,146.73" fill="#c8b6ff" fill-opacity="0.95" stroke="#264653" stroke-width="1.5"/>
+<text x="504.77" y="245.25" font-size="17" text-anchor="middle" fill="#45586b">15.85&#176;</text>
+<polygon points="600.41,253.96 761.25,208.29 730.80,101.06 569.96,146.73" fill="#c8b6ff" fill-opacity="0.95" stroke="#264653" stroke-width="1.5"/>
 <text x="665.61" y="177.51" font-size="20" text-anchor="middle" dominant-baseline="middle" fill="#1d3557">overShelf-3</text>
-<text x="665.61" y="199.58" font-size="17" text-anchor="middle" fill="#45586b">16&#176;</text>
+<text x="665.61" y="199.58" font-size="17" text-anchor="middle" fill="#45586b">15.85&#176;</text>
 </svg>

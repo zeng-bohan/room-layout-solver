@@ -6,7 +6,7 @@
         5191.8913,
         31931.0171
       ],
-      "rotation": 195.85
+      "rotation": 195.851998
     },
     "iceMaker": {
       "center": [
@@ -20,7 +20,7 @@
         5362.6378,
         29828.7073
       ],
-      "rotation": 105.85
+      "rotation": 105.851998
     },
     "shelf-2": {
       "center": [
@@ -41,21 +41,21 @@
         5906.2943,
         29085.603
       ],
-      "rotation": 105.85
+      "rotation": 105.851998
     },
     "overShelf-2": {
       "center": [
         5969.1272,
         32635.0976
       ],
-      "rotation": 15.85
+      "rotation": 15.852
     },
     "overShelf-3": {
       "center": [
         6546.3095,
         32798.9897
       ],
-      "rotation": 15.85
+      "rotation": 15.852
     }
   },
   "allItemsWallFlush": true,
