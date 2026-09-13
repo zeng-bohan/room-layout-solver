@@ -32,31 +32,43 @@ def run(name, data, expect_feasible, expect_flush=None):
     problem = Problem(data)
     result = Solver(problem).solve()
     ok, _ = validate_result(data, result, report=lambda m: print("   " + m))
-    assert result["feasible"] == expect_feasible, \
-        "%s: expected feasible=%s got %s" % (name, expect_feasible, result["feasible"])
-    assert ok, "%s: validation failed" % name
+    assert result["feasible"] == expect_feasible, "{}: expected feasible={} got {}".format(
+        name,
+        expect_feasible,
+        result["feasible"],
+    )
+    assert ok, f"{name}: validation failed"
     if expect_flush is not None:
-        assert result.get("allItemsWallFlush") is expect_flush, \
-            "%s: expected allItemsWallFlush=%s" % (name, expect_flush)
+        assert result.get("allItemsWallFlush") is expect_flush, (
+            f"{name}: expected allItemsWallFlush={expect_flush}"
+        )
     with open(os.path.join(OUT, name + ".result.json"), "w", encoding="utf-8") as f:
         json.dump(result, f, ensure_ascii=False, indent=2)
-    print("PASS %s (feasible=%s)" % (name, result["feasible"]))
+    print("PASS {} (feasible={})".format(name, result["feasible"]))
 
 
 # 1. roomy room, everything fits against the walls
 run(
     "roomy",
-    square_room(6000, [[6000, 2000], [6000, 3000]], False,
-                {"fridge": [1220, 1330], "shelf-1": [1000, 400],
-                 "shelf-2": [1000, 400], "overShelf-1": [600, 400]}),
-    expect_feasible=True, expect_flush=True,
+    square_room(
+        6000,
+        [[6000, 2000], [6000, 3000]],
+        False,
+        {
+            "fridge": [1220, 1330],
+            "shelf-1": [1000, 400],
+            "shelf-2": [1000, 400],
+            "overShelf-1": [600, 400],
+        },
+    ),
+    expect_feasible=True,
+    expect_flush=True,
 )
 
 # 2. fridge simply does not fit (1200 < 1220 in every orientation)
 run(
     "too-small",
-    square_room(1200, [[1200, 400], [1200, 800]], False,
-                {"fridge": [1220, 1330]}),
+    square_room(1200, [[1200, 400], [1200, 800]], False, {"fridge": [1220, 1330]}),
     expect_feasible=False,
 )
 
@@ -97,8 +109,9 @@ data = {
     "algoToPlace": {"fridge": [1220, 1330], "shelf-1": [1000, 400]},
 }
 res = Solver(Problem(data)).solve()
-assert res["fridgeDoorClearanceMm"] == 0.0, \
-    "fridge-door-edge: expected fallback clearance 0, got %s" % res["fridgeDoorClearanceMm"]
+assert res["fridgeDoorClearanceMm"] == 0.0, (
+    "fridge-door-edge: expected fallback clearance 0, got {}".format(res["fridgeDoorClearanceMm"])
+)
 print("PASS fridge-door-edge clearance fallback (0 mm)")
 
 print("ALL TESTS PASSED")

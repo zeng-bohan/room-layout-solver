@@ -17,6 +17,7 @@ CONTAINMENT_SLACK = 0.5
 
 # ---------------------------------------------------------------- points ---
 
+
 def sub(a, b):
     return (a[0] - b[0], a[1] - b[1])
 
@@ -49,6 +50,7 @@ def unit(a):
 
 
 # -------------------------------------------------------------- polygons ---
+
 
 def polygon_signed_area(poly):
     s = 0.0
@@ -93,8 +95,9 @@ def segments_properly_cross(p1, p2, p3, p4):
     d4 = cross3(p1, p2, p4)
     if abs(d1) < EPS and abs(d2) < EPS and abs(d3) < EPS and abs(d4) < EPS:
         return False
-    if ((d1 > EPS and d2 < -EPS) or (d1 < -EPS and d2 > EPS)) and \
-       ((d3 > EPS and d4 < -EPS) or (d3 < -EPS and d4 > EPS)):
+    if ((d1 > EPS and d2 < -EPS) or (d1 < -EPS and d2 > EPS)) and (
+        (d3 > EPS and d4 < -EPS) or (d3 < -EPS and d4 > EPS)
+    ):
         return True
     return False
 
@@ -106,6 +109,7 @@ def polygon_edges(poly):
 
 
 # ------------------------------------------------------------ rectangles ---
+
 
 def rect_corners(center, angle_deg, w, h):
     a = math.radians(angle_deg)

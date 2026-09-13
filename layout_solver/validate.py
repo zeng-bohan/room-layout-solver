@@ -8,7 +8,7 @@ fridge clearance) and reports pass/fail per rule.
 import math
 
 from . import geometry as geo
-from .solver import ang_eq, ANGLE_TOL, MIN_DOOR_CLEARANCE
+from .solver import MIN_DOOR_CLEARANCE, ang_eq
 
 
 def check(data, result, report=print):
@@ -27,41 +27,45 @@ def check(data, result, report=print):
         # back to local frame; inset slightly so wall-flush items (which touch
         # the boundary exactly, which is legal) still pass the point tests
         c = (cx - problems.offset[0], cy - problems.offset[1])
-        l, w = problems.items[name]
-        rects[name] = (c, float(spec["rotation"]), l - 1.0, w - 1.0)
+        length, w = problems.items[name]
+        rects[name] = (c, float(spec["rotation"]), length - 1.0, w - 1.0)
 
     # 1. inside the boundary
     for name, r in rects.items():
         corners = geo.rect_corners(*r)
-        mid_ok = all(geo.point_in_polygon(geo.mul(geo.add(corners[i], corners[(i + 1) % 4]), 0.5),
-                                          problems.poly) for i in range(4))
+        mid_ok = all(
+            geo.point_in_polygon(
+                geo.mul(geo.add(corners[i], corners[(i + 1) % 4]), 0.5), problems.poly
+            )
+            for i in range(4)
+        )
         corners_ok = all(geo.point_in_polygon(p, problems.poly) for p in corners)
         crossing = any(
             geo.segments_properly_cross(corners[i], corners[(i + 1) % 4], e1, e2)
-            for e1, e2 in geo.polygon_edges(problems.poly) for i in range(4))
+            for e1, e2 in geo.polygon_edges(problems.poly)
+            for i in range(4)
+        )
         if not (corners_ok and mid_ok) or crossing:
-            errors.append("%s is not fully inside the boundary" % name)
+            errors.append(f"{name} is not fully inside the boundary")
 
     # 2. pairwise overlap
     names = list(rects)
     for i in range(len(names)):
         for j in range(i + 1, len(names)):
             if geo.rect_overlap(rects[names[i]], rects[names[j]]):
-                errors.append("%s overlaps %s" % (names[i], names[j]))
+                errors.append(f"{names[i]} overlaps {names[j]}")
 
     # 3. door rules
     for name, r in rects.items():
         if problems.door_zone and geo.rect_overlap(r, problems.door_zone):
-            errors.append("%s blocks the inward-door swing zone" % name)
+            errors.append(f"{name} blocks the inward-door swing zone")
         if geo.rect_overlap(r, problems.doorway_strip):
-            errors.append("%s blocks the doorway" % name)
+            errors.append(f"{name} blocks the doorway")
 
     # 4. orientation must be parallel/perpendicular to some boundary edge
     for name, r in rects.items():
-        if not any(ang_eq(r[1], w[4]) or ang_eq(r[1], w[4] + 90.0)
-                   for w in problems.walls):
-            errors.append("%s rotation %.2f not parallel/perpendicular to any wall"
-                          % (name, r[1]))
+        if not any(ang_eq(r[1], w[4]) or ang_eq(r[1], w[4] + 90.0) for w in problems.walls):
+            errors.append(f"{name} rotation {r[1]:.2f} not parallel/perpendicular to any wall")
 
     # 5. fridge door edge: nothing may touch it; clearance strip must be clear
     for name, r in rects.items():
@@ -69,29 +73,26 @@ def check(data, result, report=print):
             continue
         clear = result.get("fridgeDoorClearanceMm")
         depth = max(float(clear or 0.0), MIN_DOOR_CLEARANCE)
-        c, a, l, w = r
+        c, a, length, w = r
         rad = math.radians(a)
         nx, ny = -math.sin(rad), math.cos(rad)
         edge_mid = (c[0] + nx * w / 2.0, c[1] + ny * w / 2.0)
         center = (edge_mid[0] + nx * depth / 2.0, edge_mid[1] + ny * depth / 2.0)
-        strip = (center, a, l, depth)
+        strip = (center, a, length, depth)
         if not geo.rect_inside_polygon(strip[0], strip[1], strip[2], strip[3], problems.poly):
-            errors.append("%s door edge faces a wall / leaves the room" % name)
+            errors.append(f"{name} door edge faces a wall / leaves the room")
         for other, orect in rects.items():
             if other != name and geo.rect_overlap(strip, orect):
-                errors.append("%s sits inside %s's door clearance strip"
-                              % (other, name))
-        infos.append("%s door clearance strip: %.0f mm x %.0f mm kept clear"
-                     % (name, l, depth))
+                errors.append(f"{other} sits inside {name}'s door clearance strip")
+        infos.append(f"{name} door clearance strip: {length:.0f} mm x {depth:.0f} mm kept clear")
 
     # 6. informational: wall-flush ratio
     flush = 0
-    for name, r in rects.items():
-        contact = sum(geo.segment_rect_overlap_len(w[0], w[1], r, 1.0)
-                      for w in problems.walls)
+    for r in rects.values():
+        contact = sum(geo.segment_rect_overlap_len(w[0], w[1], r, 1.0) for w in problems.walls)
         if contact > 1.0:
             flush += 1
-    infos.append("wall-flush items: %d / %d" % (flush, len(rects)))
+    infos.append(f"wall-flush items: {flush} / {len(rects)}")
 
     for e in errors:
         report("FAIL: " + e)
@@ -113,8 +114,10 @@ class ProblemView:
         self.items = {n: (float(d[0]), float(d[1])) for n, d in data["algoToPlace"].items()}
 
         door = [tuple(map(float, p)) for p in data["door"]]
-        door = [(door[0][0] - self.offset[0], door[0][1] - self.offset[1]),
-                (door[1][0] - self.offset[0], door[1][1] - self.offset[1])]
+        door = [
+            (door[0][0] - self.offset[0], door[0][1] - self.offset[1]),
+            (door[1][0] - self.offset[0], door[1][1] - self.offset[1]),
+        ]
 
         self.walls = []
         for a, b in geo.polygon_edges(self.poly):
@@ -123,8 +126,11 @@ class ProblemView:
             u = geo.unit(geo.sub(b, a))
             n0 = geo.perp(u)
             mid = geo.mul(geo.add(a, b), 0.5)
-            n = n0 if geo.point_in_polygon(geo.add(mid, geo.mul(n0, 1.0)), self.poly) \
+            n = (
+                n0
+                if geo.point_in_polygon(geo.add(mid, geo.mul(n0, 1.0)), self.poly)
                 else geo.mul(n0, -1.0)
+            )
             self.walls.append((a, b, u, n, (math.degrees(math.atan2(u[1], u[0]))) % 180.0))
 
         # nearest wall to the door
@@ -134,8 +140,8 @@ class ProblemView:
             return geo.norm(geo.sub(p, geo.add(a, geo.mul(ab, t))))
 
         wa, wb, wu, wn, wangle = min(
-            self.walls,
-            key=lambda w: min(d_seg(door[0], w[0], w[1]), d_seg(door[1], w[0], w[1])))
+            self.walls, key=lambda w: min(d_seg(door[0], w[0], w[1]), d_seg(door[1], w[0], w[1]))
+        )
         n = geo.norm(geo.sub(door[1], door[0]))
         mid = geo.mul(geo.add(door[0], door[1]), 0.5)
         self.doorway_strip = (mid, wangle, n, MIN_DOOR_CLEARANCE)

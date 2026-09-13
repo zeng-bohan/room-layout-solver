@@ -20,7 +20,7 @@ from layout_solver import Problem, Solver, render_svg, validate_result
 
 def run_file(in_path, out_dir):
     name = os.path.splitext(os.path.basename(in_path))[0]
-    with open(in_path, "r", encoding="utf-8") as f:
+    with open(in_path, encoding="utf-8") as f:
         data = json.load(f)
 
     problem = Problem(data)
@@ -33,13 +33,11 @@ def run_file(in_path, out_dir):
 
     svg_path = os.path.join(out_dir, name + ".svg")
     if result["feasible"]:
-        from layout_solver import geometry as geo
         rects = []
         for pname, spec in result["placements"].items():
-            c = (spec["center"][0] - problem.offset[0],
-                 spec["center"][1] - problem.offset[1])
-            l, w = problem.items[pname]
-            rects.append((pname, (c, float(spec["rotation"]), l, w)))
+            c = (spec["center"][0] - problem.offset[0], spec["center"][1] - problem.offset[1])
+            length, w = problem.items[pname]
+            rects.append((pname, (c, float(spec["rotation"]), length, w)))
 
         class _Pl:
             def __init__(self, name, rect):
@@ -53,11 +51,11 @@ def run_file(in_path, out_dir):
         svg_path = None
 
     print("=" * 60)
-    print("%s  ->  %s" % (in_path, result_path))
+    print(f"{in_path}  ->  {result_path}")
     ok, _infos = validate_result(data, result)
     print(json.dumps(result, ensure_ascii=False, indent=2))
     if svg_path:
-        print("drawing: %s" % svg_path)
+        print(f"drawing: {svg_path}")
     return ok
 
 
@@ -70,9 +68,13 @@ def main():
     files = []
     for path in args.inputs:
         if os.path.isdir(path):
-            files.extend(sorted(
-                os.path.join(path, f) for f in os.listdir(path) if f.endswith(".json")
-                and not f.endswith(".result.json")))
+            files.extend(
+                sorted(
+                    os.path.join(path, f)
+                    for f in os.listdir(path)
+                    if f.endswith(".json") and not f.endswith(".result.json")
+                )
+            )
         else:
             files.append(path)
 
@@ -81,7 +83,7 @@ def main():
         try:
             all_ok &= run_file(path, args.out)
         except Exception as exc:  # keep going across batch inputs
-            print("ERROR while solving %s: %s" % (path, exc), file=sys.stderr)
+            print(f"ERROR while solving {path}: {exc}", file=sys.stderr)
             all_ok = False
     sys.exit(0 if all_ok else 1)
 

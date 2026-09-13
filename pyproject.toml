@@ -1,0 +1,35 @@
+[project]
+name = "room-layout-solver"
+version = "1.0.0"
+description = "多边形房间内矩形家具自动布局求解器：贴墙优先、门净空感知、零第三方依赖"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { file = "LICENSE" }
+authors = [{ name = "zeng-bohan" }]
+keywords = ["computational-geometry", "layout-solver", "polygon", "constraint-solver", "backtracking"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Mathematics",
+]
+
+[project.scripts]
+room-layout-solver = "main:main"
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["layout_solver"]
+py-modules = ["main"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py38"
+extend-exclude = ["outputs"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
